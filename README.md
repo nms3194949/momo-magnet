@@ -1,1 +1,1 @@
-# momo-magnet
+# Email名單
