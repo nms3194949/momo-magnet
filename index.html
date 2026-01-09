@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MOMO 財商智庫 | 2026 佈局指南</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
+
+    :root {
+      --bg-dark: #070A10;
+      --card-bg: #0A1221;
+      --gold: #C9A227;
+      --gold-light: #F0D376;
+      --text-gray: #9CA3AF;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(201,162,39,0.08) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(201,162,39,0.05) 0%, transparent 40%);
+      font-family: 'Noto Sans TC', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: white;
+    }
+
+    /* 主卡片容器 */
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(10, 18, 33, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 頂部金色光條裝飾 */
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    /* 大頭貼/Logo 區域 */
+    .avatar {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--gold), #5a4608);
+      position: relative;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      background: #000;
+      border: 3px solid var(--card-bg);
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      color: var(--gold);
+      font-size: 28px;
+      margin: 0 0 10px;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 10px rgba(201,162,39,0.3);
+    }
+
+    p.sub {
+      color: var(--text-gray);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    /* 表單樣式 */
+    .form-group {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      transition: 0.3s;
+      outline: none;
+      text-align: center;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--gold);
+      background: rgba(201,162,39,0.05);
+      box-shadow: 0 0 15px rgba(201,162,39,0.1);
+    }
+
+    button {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), #9e7f1b);
+      color: #000;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 5px 15px rgba(201,162,39,0.25);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(201,162,39,0.4);
+    }
+
+    button:disabled {
+      opacity: 0.7;
+      cursor: wait;
+    }
+
+    .msg {
+      margin-top: 15px;
+      font-size: 14px;
+      min-height: 20px;
+    }
+    .msg.success { color: #4ade80; }
+    .msg.error { color: #ef4444; }
+
+    .footer-note {
+      margin-top: 30px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 1px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="avatar">
+      <img src="https://via.placeholder.com/150/000000/C9A227?text=MOMO" alt="MOMO Avatar">
+    </div>
+
+    <h1>2026 財富佈局指南</h1>
+    <p class="sub">
+      市場動盪正是重分配的機會。<br>
+      輸入 Email，免費領取我私藏的<br>
+      <strong>「現金流與複利思維導圖」</strong>。
+    </p>
+
+    <form id="subForm">
+      <div class="form-group">
+        <input type="email" name="email" placeholder="輸入您的 Email" required>
+      </div>
+      <button type="submit" id="submitBtn">立即免費領取</button>
+      <div id="msg" class="msg"></div>
+    </form>
+
+    <div class="footer-note">MOMO FINSPHERE · COPYRIGHT 2026</div>
+  </div>
+
+  <script>
+    // ⚠️ 這是您已測試成功的 Web App URL
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza8PJP2HVDm-Yy6QeAt4mS_n16DpkZbMa-m2ajCoieqAx7xqkrINh1cwLJ2n8r3yKnaQ/exec';
+
+    const form = document.getElementById('subForm');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('submitBtn');
+
+    // 1️⃣ 自動抓取網址上的推薦碼 (?ref=XXXX)
+    // 這是裂變系統的關鍵，能抓到是誰推薦的
+    const urlParams = new URLSearchParams(window.location.search);
+    const refCode = urlParams.get('ref');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      
+      // UI 鎖定：避免重複點擊
+      btn.disabled = true;
+      btn.textContent = '處理中...';
+      msg.textContent = '';
+
+      // 建立表單資料
+      const formData = new FormData(form);
+
+      // 2️⃣ 如果有推薦碼，把它塞進表單資料跟著送出
+      if (refCode) {
+        formData.append('ref', refCode); 
+        console.log("偵測到推薦人代碼:", refCode);
+      }
+
+      // 3️⃣ 發送請求 (使用 no-cors 模式)
+      // no-cors 是為了讓 GitHub Pages 不會被瀏覽器安全性擋下
+      fetch(SCRIPT_URL, { 
+        method: 'POST', 
+        body: formData,
+        mode: 'no-cors' 
+      })
+      .then(() => {
+        // 因 no-cors 模式下，瀏覽器無法讀取後端回傳的 JSON 內容 (這很正常)
+        // 只要程式沒有跳到 catch，就代表請求已成功發出
+        msg.textContent = '🎉 成功！請至信箱查收 (若無請檢查垃圾郵件)';
+        msg.className = 'msg success';
+        form.reset();
+      })
+      .catch(error => {
+        msg.textContent = '⚠️ 發生錯誤，請稍後再試';
+        msg.className = 'msg error';
+        console.error('Error:', error);
+      })
+      .finally(() => {
+        // 恢復按鈕狀態
+        btn.disabled = false;
+        btn.textContent = '立即免費領取';
+      });
+    });
+  </script>
+
+</body>
+</html>
