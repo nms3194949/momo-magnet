@@ -10,7 +10,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content="免費領取：2026 財富佈局指南 (含現金流導圖)" />
   <meta property="og:description" content="MOMO 財商智庫獨家揭露。市場動盪正是財富重分配的機會，立即點擊領取。" />
-  <meta property="og:image" content="https://crmpos.mecango.com/_files/49/9040149/f/LOGO_300300.png" />
+  <meta property="og:image" content="https://nms3194949.github.io/momo-magnet/LOGO_300300.png" />
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Sans+TC:wght@300;400;700&display=swap');
@@ -44,7 +44,7 @@
     .container {
       width: 100%;
       max-width: 480px;
-      background: rgba(10, 18, 33, 0.7); /* 增加一點不透明度 */
+      background: rgba(10, 18, 33, 0.7);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -101,7 +101,6 @@
 
     .form-group { margin-bottom: 20px; }
 
-    /* 優化輸入框體驗 */
     input[type="email"] {
       width: 100%;
       padding: 16px;
@@ -147,7 +146,6 @@
       transform: none;
     }
 
-    /* 成功狀態的按鈕樣式 */
     button.shared {
       background: transparent;
       border: 1px solid var(--gold);
@@ -175,7 +173,7 @@
 
   <div class="container">
     <div class="avatar">
-      <img src="https://crmpos.mecango.com/_files/49/9040149/f/%E6%9C%AA%E5%91%BD%E5%90%8D%E8%A8%AD%E8%A8%88(3).png" alt="MOMO Avatar">
+      <img src="./LOGO_300300.png" alt="MOMO Avatar">
     </div>
 
     <h1>2026 財富佈局指南</h1>
@@ -203,14 +201,12 @@
     const msg = document.getElementById('msg');
     const btn = document.getElementById('submitBtn');
 
-    // 獲取當前網址的 ref 參數
     const urlParams = new URLSearchParams(window.location.search);
     const refCode = urlParams.get('ref');
 
     form.addEventListener('submit', e => {
       e.preventDefault();
       
-      // 鎖定按鈕
       btn.disabled = true;
       btn.textContent = '系統處理中...';
       msg.textContent = '';
@@ -220,46 +216,41 @@
         formData.append('ref', refCode);
       }
 
-      // 注意：這裡移除了 'no-cors'，因為我們要讀取回傳結果
-      // ⚠️ 請務必更新您的 GAS 後端代碼 (見下方說明)
       fetch(SCRIPT_URL, { 
         method: 'POST', 
         body: formData 
       })
-      .then(response => response.json()) // 解析 JSON
+      .then(response => response.json())
       .then(data => {
         if(data.result === 'success') {
-          // 成功邏輯
           msg.innerHTML = '🎉 <b>登記成功！</b>請至信箱查收。<br><span style="font-size:12px; opacity:0.8">(若無收到請檢查垃圾郵件)</span>';
           msg.className = 'msg success';
           
-          // 隱藏輸入框，將按鈕改為分享功能 (優化裂變)
           document.querySelector('.form-group').style.display = 'none';
           btn.textContent = '🔗 點此複製連結分享給朋友';
           btn.className = 'shared';
           btn.disabled = false;
           
-          // 點擊按鈕變成複製連結
           btn.onclick = (evt) => {
             evt.preventDefault();
-            const shareUrl = window.location.href.split('?')[0] + '?ref=' + encodeURIComponent(formData.get('email').split('@')[0]); // 簡易生成 ref
+            const shareUrl = window.location.href.split('?')[0] + '?ref=' + encodeURIComponent(formData.get('email').split('@')[0]); 
             navigator.clipboard.writeText(shareUrl).then(() => {
               btn.textContent = '✅ 已複製連結！';
               setTimeout(() => btn.textContent = '🔗 點此複製連結分享給朋友', 2000);
             });
           };
 
+        } else if (data.msg === 'duplicate') {
+          msg.textContent = '💡 您已經登記過了，請直接檢查信箱喔！';
+          msg.className = 'msg'; // 保持白色或原本顏色
         } else {
           throw new Error(data.error || 'Unknown error');
         }
       })
       .catch(error => {
-        // 錯誤處理
         console.error('Error:', error);
-        msg.textContent = '⚠️ 連線異常。若持續發生，請檢查網路或稍後再試。';
+        msg.textContent = '⚠️ 連線異常，請稍後再試。';
         msg.className = 'msg error';
-        
-        // 恢復按鈕讓使用者重試
         btn.disabled = false;
         btn.textContent = '立即免費領取';
       });
