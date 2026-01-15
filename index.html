@@ -195,6 +195,7 @@
   </div>
 
   <script>
+    // ⚠️ 貼心提醒：若你剛剛有重新部署 GAS 並產生「新版本」，請確認此網址是否一致
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx8sk537G4UQc_DOFI-KCK4Ea5jzb4FKoWim867NMoLRt4r5pOCACam5LrjyaC6pZkt/exec';
     
     const form = document.getElementById('subForm');
@@ -211,18 +212,26 @@
       btn.textContent = '系統處理中...';
       msg.textContent = '';
 
-      const formData = new FormData(form);
-      if (refCode) {
-        formData.append('ref', refCode);
-      }
+      // 1. 準備資料包裹 (JSON 格式)
+      // 這裡非常重要：加上 action: "subscribe" 才能讓後端知道你要做什麼
+      const payload = {
+        action: "subscribe",
+        email: form.email.value,
+        name: "", // 表單只有 Email，姓名暫時留空
+        refCode: refCode || ""
+      };
 
+      // 2. 使用 JSON 字串發送請求
       fetch(SCRIPT_URL, { 
         method: 'POST', 
-        body: formData 
+        body: JSON.stringify(payload) 
       })
       .then(response => response.json())
       .then(data => {
-        if(data.result === 'success') {
+        console.log("後端回傳資料:", data); // 方便你除錯看結果
+
+        // 3. 判斷後端回傳的 success 狀態
+        if(data.success === true) {
           msg.innerHTML = '🎉 <b>登記成功！</b>請至信箱查收。<br><span style="font-size:12px; opacity:0.8">(若無收到請檢查垃圾郵件)</span>';
           msg.className = 'msg success';
           
@@ -233,7 +242,8 @@
           
           btn.onclick = (evt) => {
             evt.preventDefault();
-            const shareUrl = window.location.href.split('?')[0] + '?ref=' + encodeURIComponent(formData.get('email').split('@')[0]); 
+            const myRef = form.email.value.split('@')[0];
+            const shareUrl = window.location.href.split('?')[0] + '?ref=' + encodeURIComponent(myRef); 
             navigator.clipboard.writeText(shareUrl).then(() => {
               btn.textContent = '✅ 已複製連結！';
               setTimeout(() => btn.textContent = '🔗 點此複製連結分享給朋友', 2000);
@@ -241,15 +251,19 @@
           };
 
         } else if (data.msg === 'duplicate') {
+          // 處理重複訂閱的特殊狀況
           msg.textContent = '💡 您已經登記過了，請直接檢查信箱喔！';
-          msg.className = 'msg'; // 保持白色或原本顏色
+          msg.className = 'msg'; 
+          btn.disabled = false;
+          btn.textContent = '立即免費領取';
         } else {
-          throw new Error(data.error || 'Unknown error');
+          // 其他錯誤
+          throw new Error(data.msg || 'Unknown error');
         }
       })
       .catch(error => {
         console.error('Error:', error);
-        msg.textContent = '⚠️ 連線異常，請稍後再試。';
+        msg.textContent = '⚠️ ' + error.message;
         msg.className = 'msg error';
         btn.disabled = false;
         btn.textContent = '立即免費領取';
